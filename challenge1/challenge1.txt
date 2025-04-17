@@ -1,0 +1,4 @@
+SVM and logistic regression with HOG feature extraction
+Resnet and VGG16 for transfer learning with head
+data augmentation to fix inbalanced dataset
+f1-score or cross-entropy as loss
