@@ -1,0 +1,6 @@
+torch
+torchvision
+torchaudio
+jupyterlab
+tqdm
+pandas
