@@ -1,4 +1,5 @@
 SVM and logistic regression with HOG feature extraction
 Resnet and VGG16 for transfer learning with head
 data augmentation to fix inbalanced dataset
-f1-score or cross-entropy as loss
+f1-score o accuracy, cross-entropy as loss
+trovare modo di assegnare label al test set per confrontare con il nostro modello
