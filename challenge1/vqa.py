@@ -22,6 +22,7 @@ model.to(device)
 
 # === FUNCTION TO PREDICT USING VQA ===
 
+
 def predict_cactus_presence(image_path):
     try:
         image = Image.open(image_path).convert("RGB")
@@ -46,18 +47,53 @@ def predict_cactus_presence(image_path):
 
 
 # === LOOP OVER TEST IMAGES ===
-print("Generating labels...")
-results = []
+# print("Generating labels...")
+# results = []
 
-for filename in tqdm(os.listdir(TEST_FOLDER)):
-    path = os.path.join(TEST_FOLDER, filename)
+# for filename in tqdm(os.listdir(TEST_FOLDER)):
+#     path = os.path.join(TEST_FOLDER, filename)
+#     label = predict_cactus_presence(path)
+#     if label is not None:
+#         results.append({"id": filename, "has_cactus": label})
+#     else:
+#         print(f"Skipped {filename} (uncertain answer)")
+
+# # === SAVE TO CSV ===
+# df = pd.DataFrame(results)
+# df.to_csv(OUTPUT_CSV, index=False)
+# print(f"\n✅ Done! {len(df)} labels saved to {OUTPUT_CSV}")
+
+# === OUR TEST ===
+
+CACTUS_SET = "archive/test_set/cactus"
+NO_CACTUS_SET = "archive/test_set/no_cactus"
+
+correct_1 = 0
+total_1 = 0
+correct_0 = 0
+total_0 = 0
+
+for filename in tqdm(os.listdir(CACTUS_SET)):
+    path = os.path.join(CACTUS_SET, filename)
     label = predict_cactus_presence(path)
     if label is not None:
-        results.append({"id": filename, "has_cactus": label})
+        if label == 1:
+            correct_1 += 1
+        total_1 += 1
     else:
         print(f"Skipped {filename} (uncertain answer)")
 
-# === SAVE TO CSV ===
-df = pd.DataFrame(results)
-df.to_csv(OUTPUT_CSV, index=False)
-print(f"\n✅ Done! {len(df)} labels saved to {OUTPUT_CSV}")
+for filename in tqdm(os.listdir(NO_CACTUS_SET)):
+    path = os.path.join(NO_CACTUS_SET, filename)
+    label = predict_cactus_presence(path)
+    if label is not None:
+        if label == 0:
+            correct_0 += 1
+        total_0 += 1
+    else:
+        print(f"Skipped {filename} (uncertain answer)")
+
+
+print(f'Accuracy of the network on 1: {correct_1 / total_1:.2%}')
+print(f'Accuracy of the network on 0: {correct_0 / total_0:.2%}')
+print(f'Accuracy of the network: {(correct_1 + correct_0) / (total_1 + total_0):.2%}')
