@@ -1,25 +1,26 @@
+from transformers import ViltProcessor, ViltForQuestionAnswering
+from PIL import Image
 import os
 import torch
 from tqdm import tqdm
-from PIL import Image
 import pandas as pd
-from transformers import BlipProcessor, BlipForQuestionAnswering
+
 
 # === CONFIGURATION ===
-TEST_FOLDER = "data/test/test"  # folder with test images
+TEST_FOLDER = "/kaggle/input/test-set-v2/test"  # folder with test images
 OUTPUT_CSV = "vqa_preds.csv"
-QUESTION = "Does this aerial image contain a cactus?"
+QUESTION = "Does this aerial image contain a cactus? Answer with yes or no."
+
 
 # === LOAD MODEL ===
-print("Loading BLIP VQA model...")
-processor = BlipProcessor.from_pretrained("Salesforce/blip-vqa-base")
-model = BlipForQuestionAnswering.from_pretrained("Salesforce/blip-vqa-base")
+print("Loading model...")
+processor = ViltProcessor.from_pretrained("dandelin/vilt-b32-finetuned-vqa")
+model = ViltForQuestionAnswering.from_pretrained("dandelin/vilt-b32-finetuned-vqa")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
 # === FUNCTION TO PREDICT USING VQA ===
-
 
 def predict_cactus_presence(image_path):
     try:
@@ -28,9 +29,11 @@ def predict_cactus_presence(image_path):
         print(f"Error opening {image_path}: {e}")
         return None
 
-    inputs = processor(image, QUESTION, return_tensors="pt").to(device)
-    out = model.generate(**inputs)
-    answer = processor.decode(out[0], skip_special_tokens=True).lower()
+    encoding = processor(image, QUESTION, return_tensors="pt").to(device)
+    outputs = model(**encoding)
+    logits = outputs.logits
+    idx = logits.argmax(-1).item()
+    answer = model.config.id2label[idx].lower()
 
     # print(answer)
 
