@@ -1,0 +1,119 @@
+Audio Anomaly Detection 
+===========================================
+
+1. DATA PREPROCESSING
+----------------------
+[ ] Load audio files (WAV, 16 kHz, mono)  [come importare]
+    → Use librosa: librosa.load("file.wav", sr=16000)
+
+[ ] Normalize the waveform
+    → librosa.util.normalize(signal)
+
+[ ] Apply noise reduction
+    → Use 'noisereduce' or spectral gating
+
+[ ] data augmentation to increase diversity
+    → Add white noise
+    → Apply pitch shifting
+    → Use time stretching
+
+--------------------------------------------------
+
+2. FEATURE EXTRACTION
+----------------------
+[ ] Compute MFCCs (Mel-Frequency Cepstral Coefficients)
+    → librosa.feature.mfcc(signal, sr=sr, n_mfcc=13)
+
+[ ] Compute additional features:
+    → Zero Crossing Rate (librosa.feature.zero_crossing_rate)
+    → Log-mel spectrogram (librosa.feature.melspectrogram)
+    → Chroma features (librosa.feature.chroma_stft)
+
+[ ] Extract embeddings from pre-trained models
+    → Use VGGish, Wav2Vec, or similar models
+
+[ ] Compute statistical summaries of features
+    → mean, std, skewness
+
+--------------------------------------------------
+
+3. MODEL CHOICE
+----------------
+Option A - Classical Models
+[ ] Gaussian Mixture Model (GMM)
+[ ] One-Class SVM
+[ ] Isolation Forest
+
+Option B - Deep Learning
+[ ] Build and train Autoencoder (AE)
+    → Input: MFCCs or spectrograms
+    → Loss: MSE (reconstruction error)
+
+[ ] (cercare cosa sono nel dettaglio)Use Variational AE or Convolutional AE
+
+[ ] Use pretrained model + clustering
+    → Extract features → Apply K-Means / DBSCAN
+
+[ ] (advanced forse non funziona)  Use RNNs or Transformers (AST) for temporal modeling
+
+--------------------------------------------------
+
+4. TRAINING & VALIDATION
+--------------------------
+[ ] Split data:
+    → Train: 80% (only normal sounds)
+    → Validation: 10% (normal + anomalies)
+    → Test: 10% (normal + anomalies)
+
+[ ] Train the model on normal data only
+
+[ ] Use validation data to tune thresholds or hyperparameters
+
+--------------------------------------------------
+
+5. EVALUATION
+--------------
+[ ] Compute reconstruction error or anomaly score
+
+[ ] Evaluate with:
+    → AUC-ROC score
+    → F1-score
+    → Confusion matrix
+
+[ ] Visualize results:
+    → ROC curve
+    → Histogram of scores
+
+--------------------------------------------------
+
+6. (OPTIONAL) IMPROVEMENTS
+---------------------------
+[ ] Use semi-supervised learning with a few known anomalies
+
+[ ] Combine multiple models (ensemble) to reduce false positives
+
+[ ] Generate synthetic anomalies for robust training
+
+--------------------------------------------------
+
+7. USAGE
+----------------------
+[ ] Save trained model
+
+[ ] Build inference pipeline:
+    → Preprocess audio
+    → Extract features
+    → Run through model
+    → Compute anomaly score
+    → Flag if score > threshold
+
+--------------------------------------------------
+
+LIBRARIES
+-----------------------
+- librosa
+- numpy
+- sklearn
+- tensorflow / keras
+- noisereduce
+
