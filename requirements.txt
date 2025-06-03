@@ -9,3 +9,4 @@ transformers-interpret
 scikit-learn
 datasets
 pytorch-lightning
+nltk
