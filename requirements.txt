@@ -5,3 +5,5 @@ jupyterlab
 tqdm
 pandas
 matplotlib
+transformers-interpret
+scikit-learn
